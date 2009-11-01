@@ -83,28 +83,6 @@ var map = curry(function (f, a) {
   return a.map(f);
 });
 
-// Takes any functor dictionary and decorates it with applicative functions
-/*function applicative(functor, unit, ap) {
-  functor.unit = unit;
-  functor.ap = ap;
-  functor.liftM2 = curry(function(f, a) {
-    return functor.ap(functor.fmap(a)(f));
-  });
-}
-
-// Takes an applicative functor and decorates it with monadic functions
-function monadByJoin(applicative, join) {
-  applicative.join = join;
-  applicative.bind = (join.o).o(applicative.fmap);
-}
-
-// Takes an applicative functor and decorates it with monadic functions
-function monadByBind(applicative, bind) {
-  applicative.bind = bind;
-  applicative.join = bind(I);
-  applicative.fmap = (applicative.unit.o).o(bind)
-}*/
-
 // The identity monad. Provides lazy semantics. Id x is a nullary function resulting in x.
 var Id = {
   // a => Id a
