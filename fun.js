@@ -26,7 +26,6 @@ var curry = function (f) {
     return f.curry(a);
   };
 };
-;
 
 // TODO: Write a single function that curries functions of any arity
 var curry2 = function (f) {
@@ -77,6 +76,10 @@ Function.prototype.ap = function(g) {
 // All mortal men are mortal.
 // (a => b => a)
 var K = curry(function(x, y) { return x; });
+
+// Recursive function (Y-Combinator).
+
+var Y = function (f) { return Reader.join(I)(curry(function (h, a) { return f(h(h))(a); })); };
 
 // Promotes a function to a function over Enumerable.
 var map = curry(function (f, a) {
@@ -155,8 +158,8 @@ var Maybe = {
     return o(a)(I);
   }),
 
-  // If we might have cake, then we have cake. Don't count on cake, though.
-  // Maybe a => a. Not a total function.
+  // Maybe a => a.
+  // If we might have cake, then we have cake. The cake is a lie.
   fromJust: function(j) {
     return j(function () { throw "fromJust: Nothing"; })(Id.unit)();
   },
@@ -237,10 +240,28 @@ var List = {
            }
 };
 
+// Lazy linked list by higher-order functions.
+// Here, the list itself is the foldr function.
+var Stream = {
+  Nil : curry(function(n, c) { return function() { return n; }; }),
+  Cons : curry(function(h, t) {
+      return curry(function (n, c) {
+        return c(h)(function () { return t(n)(c)(); });
+      });
+    }),
+  head : function(xs) { return xs(null)(curry(function (h, t) { return Id.unit(h); }))(); },
+  tail : function(xs) {
+    return fst(xs(pa  mir(null)(Stream.Nil))(curry(function (x, p) {
+            return function () {
+              return pair(snd(p()))(Stream.Cons(x)(snd(p())));
+            };}))());},
+  isEmpty : function (xs) { return xs(true)(curry(function(h, t) { return Id.unit(false); }))(); }
+}
+
 // Traversal in a monad
 // [m a] => m [a]
-Id.sequence = function(xs) { return List.foldr(Id.liftM2(Cons))(Id.unit(Nil))(xs); };
-Maybe.sequence = function(xs) { return List.foldr(Maybe.liftM2(Cons))(Just(Nil))(xs); };
+Id.sequence = function(xs) { return xs(Id.liftM2(Cons))(Id.unit(Nil)); };
+Maybe.sequence = function(xs) { return xs(Maybe.liftM2(Cons))(Just(Nil)); };
 
 // Get a value from an object or a hash
 var get = curry(function (a, o) {
