@@ -1,0 +1,6 @@
+Javascript has a lot of ceremony to it. For example, conditionals are formally introduced with "if" and "else", loops with a hearty "for", and just so you know that Javascript is introducing a function, it declares "function" in no ambiguous terms. It has a "new" keyword that yields mutable state with circumstance and pomp. As a result, we can pretend that it's "object-oriented" and even that its "objects" have types.
+
+But you know what? I don't buy it. I say it's all a gimmick, and I'd like to throw all of that ceremony away. When I'm working with a dynamic language like Javascript, I want it to be unapologetically dynamic. I want it to take me down that dynamic rabbit hole as deep as it goes, with no pretense, and no dialogue of comfort along the way. When all of that veneer is peeled off, such a language really only has one construct; the ultimate construct: Lambda.
+
+This library is lambdas all the way down. Enjoy!
+
