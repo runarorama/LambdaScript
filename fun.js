@@ -260,8 +260,8 @@ var Stream = {
 
 // Traversal in a monad
 // [m a] => m [a]
-Id.sequence = function(xs) { return xs(Id.liftM2(Cons))(Id.unit(Nil)); };
-Maybe.sequence = function(xs) { return xs(Maybe.liftM2(Cons))(Just(Nil)); };
+Id.sequence = function(xs) { return List.foldr(Id.liftM2(Cons))(Id.unit(Nil))(xs); };
+Maybe.sequence = function(xs) { return List.foldr(Maybe.liftM2(Cons))(Just(Nil))(xs); };
 
 // Get a value from an object or a hash
 var get = curry(function (a, o) {
