@@ -78,9 +78,9 @@ Function.prototype.ap = function(g) {
 var K = curry(function(x, y) { return x; });
 
 // Recursive function (Y-Combinator).
-
-var Y = function (f) { return Reader.join(I)(curry(function (h, a) { return f(h(h))(a); })); };
-
+// Y = (λf . (λx . f (x x)) (λx . f (x x))) 
+var Y = function (f) { return function(x) { return f(x(x)); }(function (x) { return f(x(x)); }); };
+  
 // Promotes a function to a function over Enumerable.
 var map = curry(function (f, a) {
   return a.map(f);
@@ -251,12 +251,12 @@ var Stream = {
     }),
   head : function(xs) { return xs(null)(curry(function (h, t) { return Id.unit(h); }))(); },
   tail : function(xs) {
-    return fst(xs(pa  mir(null)(Stream.Nil))(curry(function (x, p) {
+    return fst(xs(pair(null)(Stream.Nil))(curry(function (x, p) {
             return function () {
               return pair(snd(p()))(Stream.Cons(x)(snd(p())));
             };}))());},
   isEmpty : function (xs) { return xs(true)(curry(function(h, t) { return Id.unit(false); }))(); }
-}
+};
 
 // Traversal in a monad
 // [m a] => m [a]
